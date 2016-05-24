@@ -1,6 +1,6 @@
 {
   "name": "tsv-seq-pagination",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Pagination class for sequelize",
   "main": "index.js",
   "scripts": {
