@@ -3,28 +3,12 @@
  */
 module.exports = {
 
-    validateLimit: function (limit) {
-
-        if(limit && limit>0)
-            return limit;
-        else
-            return 10;
-
-    },
-    validatePage: function (page) {
-
-        if(page && page>0)
-            return page;
-        else
-            return 1;
-    },
-
     /**
      *   parametrs.entity;
-         parametrs.params;
-         parametrs.paginationObject;
-         parametrs.res;
-         parametrs.callback;
+     parametrs.params;
+     parametrs.paginationObject;
+     parametrs.res;
+     parametrs.callback;
      * @param parametrs
      */
     get: function (parametrs) {
@@ -38,21 +22,40 @@ module.exports = {
         var res = parametrs.res;
         var callback = parametrs.callback;
 
-        page = this.validatePage(paginationObject.page);
+
+        var validateLimit = function (limit) {
+            if(limit && limit>0)
+                return limit;
+            else
+                return 10;
+        };
+        var validatePage = function (page) {
+
+            if(page && page>0)
+                return page;
+            else
+                return 1;
+        };
+
+        page = validatePage(paginationObject.page);
+        limit = validateLimit(paginationObject.per_page);
 
         entity.findAndCountAll(params).then(function(items) {
 
-            params.limit = this.validateLimit(paginationObject.per_page);
+            params.limit = limit;
             params.offset = page  * limit - limit;
 
-            entity.findAll(params).then(function(collection) {
+            console.log('limit',params.limit);
+            console.log('ofset',params.offset);
+
+            entity.findAndCountAll(params).then(function(collection) {
 
                 var result = {
                     success: true,
-                    data: items,
+                    data: collection.rows,
                     pagination: {
-                        total_records: item,
-                        total_pages: Math.ceil(items / limit),
+                        total_records: items.count,
+                        total_pages: Math.ceil(items.count / limit),
                         current_page: page,
                         per_page: limit
                     }
@@ -65,7 +68,5 @@ module.exports = {
                 }
             });
         });
-
-
     }
 };
