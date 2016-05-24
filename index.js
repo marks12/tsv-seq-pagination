@@ -37,8 +37,8 @@ module.exports = {
                 return 1;
         };
 
-        page = validatePage(paginationObject.page);
-        limit = validateLimit(paginationObject.per_page);
+        page = validatePage(paginationObject.page) * 1;
+        limit = validateLimit(paginationObject.per_page) * 1;
 
         entity.findAndCountAll(params).then(function(items) {
 
