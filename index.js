@@ -45,9 +45,6 @@ module.exports = {
             params.limit = limit;
             params.offset = page  * limit - limit;
 
-            console.log('limit',params.limit);
-            console.log('ofset',params.offset);
-
             entity.findAndCountAll(params).then(function(collection) {
 
                 var result = {
