@@ -1,6 +1,9 @@
 /**
  * Created by tsv on 24.05.16.
  */
+
+var currentQuery = '';
+
 module.exports = {
 
     /**
@@ -39,9 +42,6 @@ module.exports = {
 
         page = validatePage(paginationObject.page) * 1;
         limit = validateLimit(paginationObject.per_page) * 1;
-
-        var only_id_params = params;
-        only_id_params.attributes = ['id'];
 
         entity.findAndCountAll(params).then(function(items) {
 
