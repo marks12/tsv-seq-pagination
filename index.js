@@ -16,6 +16,8 @@ module.exports = {
      */
     get: function (parametrs) {
 
+        var db = require('../../models/models.js');
+
         var limit;
         var page;
 
@@ -43,30 +45,31 @@ module.exports = {
         page = validatePage(paginationObject.page) * 1;
         limit = validateLimit(paginationObject.per_page) * 1;
 
-        entity.findAndCountAll(params).then(function(items) {
+        console.time('test');
 
-            params.limit = limit;
-            params.offset = page  * limit - limit;
+        params.limit = limit;
+        params.offset = page  * limit - limit;
 
-            entity.findAndCountAll(params).then(function(collection) {
+        entity.findAndCountAll(params).then(function(collection) {
 
-                var result = {
-                    success: true,
-                    data: collection.rows,
-                    pagination: {
-                        total_records: items.count,
-                        total_pages: Math.ceil(items.count / limit),
-                        current_page: page,
-                        per_page: limit
-                    }
-                };
-
-                if(callback) {
-                    callback(result);
-                } else {
-                    res.send(result);
+            var result = {
+                success: true,
+                data: collection.rows,
+                pagination: {
+                    total_records: collection.count,
+                    total_pages: Math.ceil(collection.count / limit),
+                    current_page: page,
+                    per_page: limit
                 }
-            });
+            };
+
+            if(callback) {
+                callback(result);
+            } else {
+                res.send(result);
+            }
+
+            console.timeEnd('test');
         });
     }
 };
